@@ -22,11 +22,10 @@ The goal is to share useful work with the community, not to make it easy to rela
 
 ## What Is In This Repo
 
-```text
+```
 piadvisor-prompts/
 ├── prompts/
-│   ├── system-prompt.md             # Public copy of the current shipped prompt
-│   └── system-prompt-compressed.md  # Exact embedded compressed-form prompt shipped by the app
+│   └── system-prompt.md             # Canonical PIAdvisor system prompt
 ├── templates/
 │   └── rich-formatting.md           # Markdown-to-UI formatting rules
 ├── CONTRIBUTING.md                  # Contribution guidelines
@@ -38,17 +37,13 @@ piadvisor-prompts/
 
 ### `prompts/system-prompt.md`
 
-The public copy of PIAdvisor's current shipped system prompt. It is tuned for PixInsight 1.9.x, expects PIAdvisor's `flat_kv_v2` context snapshot, and covers:
+The canonical PIAdvisor system prompt for this repository. The current prompt ID is `system-prompt-v8.6`. It is tuned for PixInsight 1.9.x, expects PIAdvisor's `flat_kv_v2` context snapshot, and covers:
 
 - evidence-based diagnosis and workflow guidance
 - adaptive explanations for beginner, intermediate, and advanced users
 - OSC, LRGB, SHO/HOO, dual-band, and multi-image reasoning
 - process ordering, failure recovery, and over-processing detection
 - conversation-first behavior for both quick image shares and deeper review requests
-
-### `prompts/system-prompt-compressed.md`
-
-The exact compressed-form system prompt currently embedded in the shipped app. It is the most direct public reference when you want to compare repo prompt text with runtime behavior.
 
 ### `templates/rich-formatting.md`
 
@@ -58,7 +53,7 @@ Formatting rules for PIAdvisor's rich chat UI, including:
 - tool links like `[[ProcessID]]`
 - structure rules for headings, lists, and response layout
 
-## How This Maps To The Shipped App
+## How This Maps To PIAdvisor Runtime
 
 These prompts are not generic assistant prompts. They are written for PIAdvisor's runtime behavior and UI:
 
@@ -71,7 +66,9 @@ If you use these files outside PIAdvisor, expect to adapt the surrounding contex
 
 ## Versioning
 
-This repo tracks the latest shipped public PIAdvisor prompt set. For `1.2.0`, the embedded app prompt is the compressed-form prompt reflected here, and the rich formatting template is synced from the shipped default template used by the app. Users can still customize their local copies from the Settings panel.
+This repo tracks the public PIAdvisor prompt policy set. `prompts/system-prompt.md` is the canonical maintained prompt surface in this repository, and the rich formatting template mirrors the default template maintained alongside PIAdvisor. Users can still customize their local copies from the Settings panel.
+
+Prompt versions are tracked by prompt ID, such as `system-prompt-v8.6`, and do not necessarily match PIAdvisor app or module versions. A PIAdvisor release can ship with an unchanged prompt, and a prompt policy update can occur independently when workflow guidance or formatting rules change.
 
 ## Contributing
 
