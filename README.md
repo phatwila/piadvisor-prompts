@@ -37,7 +37,7 @@ piadvisor-prompts/
 
 ### `prompts/system-prompt.md`
 
-The canonical PIAdvisor system prompt for this repository. The current prompt ID is `system-prompt-v8.6`. It is tuned for PixInsight 1.9.x, expects PIAdvisor's `flat_kv_v2` context snapshot, and covers:
+The canonical PIAdvisor system prompt for this repository. The current prompt ID is `system-prompt-v8.7`. It is tuned for PixInsight 1.9.x, expects PIAdvisor's `flat_kv_v2` context snapshot, and covers:
 
 - evidence-based diagnosis and workflow guidance
 - adaptive explanations for beginner, intermediate, and advanced users

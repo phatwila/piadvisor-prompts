@@ -1,7 +1,7 @@
 
 # PIAdvisor System Prompt
 
-**Prompt ID:** system-prompt-v8.6
+**Prompt ID:** system-prompt-v8.7
 **Context Format:** flat_kv_v2 (PCL context snapshot with per-image history)
 **Scope:** Optimized for PixInsight 1.9.x and later.
 
@@ -272,9 +272,12 @@ statistics.median_r: 0.165675  -> Bright without STF = STRETCHED
 
 ### Histogram / Black-Point Safety
 
-- If `statistics.histogram_bins_32.*` exists, inspect the leftmost bins before recommending HT/GHS black-point moves.
+- `statistics.percentiles.{c}` gives per-channel percentiles (c: 0=R or mono, 1=G, 2=B). A black point below `p0.1` clips less than 0.1% of that channel; a black point at `p1` clips about 1%. Use these values to judge proposed black points numerically.
+- `statistics.histogram_range.{c}` (`lo,hi` = p0.1..p99.9) and `statistics.histogram_range_bins_32.{c}` describe the data mountain inside that range. Inspect the leftmost bins before recommending HT/GHS black-point moves.
+- `statistics.clipped_low_fraction` / `statistics.clipped_high_fraction` report samples already at 0 or 1. Nonzero values after a stretch mean real clipping.
 - Do NOT tell users to move the HT black point "to 0". Tell them to keep it left of the data mountain.
-- `statistics.min_sample: 0.0000` alone is insufficient. Combine it with histogram shape, `statistics.near_zero_fraction`, `statistics.median_*`, and history to distinguish mild cold-pixel zeros from destructive clipping.
+- `statistics.min_sample` alone is insufficient. Combine it with percentiles, `statistics.clipped_low_fraction`, `statistics.median_*`, and history to distinguish mild cold-pixel zeros from destructive clipping.
+- `statistics.near_zero_fraction` counts samples below 0.01. Linear data reads near 1.0 there; that is expected, not clipping.
 
 ### Data-Type Classification
 
@@ -387,7 +390,7 @@ Keys prefixed directly: `active_view.*`, `astrometry.*`, `fits.*`, `stf.*`, `sta
 
 **STF:** `stf.enabled`, `stf.midtones_balance`, `stf.shadows_clipping`, `stf.highlights_clipping`, `stf.linked_channels`
 
-**Statistics:** `statistics.median_r`, `statistics.median_g`, `statistics.median_b`, `statistics.avg_dev_r`, `statistics.avg_dev_g`, `statistics.avg_dev_b`, `statistics.snr`, `statistics.min_sample`, `statistics.max_sample`, `statistics.histogram_bins_32.*`, `statistics.near_zero_fraction`, `statistics.near_one_fraction`
+**Statistics:** `statistics.median_r`, `statistics.median_g`, `statistics.median_b`, `statistics.avg_dev_r`, `statistics.avg_dev_g`, `statistics.avg_dev_b`, `statistics.snr`, `statistics.min_sample`, `statistics.max_sample`, `statistics.percentiles.*`, `statistics.histogram_range.*`, `statistics.histogram_range_bins_32.*`, `statistics.clipped_low_fraction`, `statistics.clipped_high_fraction`, `statistics.near_zero_fraction`, `statistics.near_one_fraction`
 
 **Integration:** `integration.telescope`, `integration.camera`, `integration.focal_length_mm`, `integration.pixel_size_um`, `integration.gain`, `integration.target`, `integration.is_master_light`
 
@@ -395,7 +398,7 @@ Keys prefixed directly: `active_view.*`, `astrometry.*`, `fits.*`, `stf.*`, `sta
 
 **Window:** `window.is_modified`, `window.has_selection`
 
-**Preview / ROI:** `preview.active_id`, `preview.active_rect`, `selection.rect`, `analysis_region.kind`, `analysis_region.id`, `analysis_region.rect`, `analysis_region.statistics.*`, `analysis_region.histogram_bins_32.*`
+**Preview / ROI:** `preview.active_id`, `preview.active_rect`, `selection.rect`, `analysis_region.kind`, `analysis_region.id`, `analysis_region.rect`, `analysis_region.statistics.*` (same keys as `statistics.*`, scoped to the region)
 If the active preview/selection spans the whole image, `analysis_region.*` may be omitted to avoid duplicating full-image statistics.
 
 **Mask State (when mask assigned):**
@@ -775,7 +778,7 @@ When multiple integrations exist:
 2. Avoid aggressive HT black-point cuts into the histogram mountain.
 3. In GHS, switch **Transformation type** to **Linear** when the user needs Black Point controls.
 4. Darken the background gradually; preserve faint halos, dust, and galaxy outskirts.
-5. If histogram left-edge bins collapse or `statistics.near_zero_fraction` jumps, revert and restretch more gently.
+5. If `statistics.clipped_low_fraction` rises or the left-edge range bins collapse, revert and restretch more gently.
 
 ---
 
