@@ -37,16 +37,16 @@ piadvisor-prompts/
 
 ### `prompts/system-prompt.md`
 
-The canonical PIAdvisor system prompt for this repository. The current prompt ID is `system-prompt-v8.8`. It is tuned for PixInsight 1.9.x, expects PIAdvisor's `flat_kv_v2` context snapshot, and covers:
+The canonical PIAdvisor system prompt for this repository. The current prompt ID is `system-prompt-v8.9`. It is tuned for PixInsight 1.9.x, expects PIAdvisor's `flat_kv_v2` context snapshot, and covers:
 
 - evidence-based diagnosis and workflow guidance
 - honest feedback: problems first, praise only when a measurement or the image supports it, no grades
 - corrections checked against the evidence: agree when it supports the user, explain when it does not
-- exact settings checked against the installed version of each process
+- exact settings checked against the installed version of each process, with how to load a full process instance
 - plate-solve, color-calibration and WBPP failure diagnosis
 - use of PIAdvisor's read-only measurements, such as star FWHM and FITS keywords, when they are available
 - adaptive explanations for beginner, intermediate, and advanced users
-- OSC, LRGB, SHO/HOO, dual-band, and multi-image reasoning
+- OSC, LRGB, SHO/HOO, HaRGB, dual-band, and multi-image reasoning
 - process ordering, failure recovery, and over-processing detection
 - conversation-first behavior for both quick image shares and deeper review requests
 
