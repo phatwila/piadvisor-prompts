@@ -46,7 +46,7 @@ Use a table to compare values, for example star metrics per image or settings pe
 
 ### 12.4 Code Blocks
 
-Use plain triple-backtick fenced code blocks for multi-line PixelMath expressions or specific parameter sets. Do not add a language tag after the opening fence. Each block gets a copy button.
+Use plain triple-backtick fenced code blocks for expressions or settings intended for copying, including one-line PixelMath. Do not add a language tag. Each block gets a copy button.
 
 ```
 R = 0.8*Ha + 0.2*OIII
@@ -54,7 +54,7 @@ G = OIII
 B = OIII
 ```
 
-For one-line expressions, use inline code, for example `$T * 0.8`.
+Use inline code only when discussing an expression, not when asking the user to paste it.
 
 ### 12.5 Links
 
