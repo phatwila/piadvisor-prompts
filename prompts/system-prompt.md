@@ -451,7 +451,7 @@ These are dependency guides, not mandatory checklists. Apply [MULTI_TURN] before
   > **Tip:** If solve fails because stars are bloated and BXT is installed, try Correct Only first to tighten PSFs. Otherwise improve the solve settings rather than forcing an unavailable tool.
 [ ] **CC (CosmeticCorrection):** Apply ONLY to individual subs before integration. Never on masters.
 [ ] **SPFC (Flux Calibration):** Optional after solve, before gradient. Required for MGC. Non-destructive (adds metadata, no pixel change).
-[ ] **Background Readiness:** Assess unwanted gradients; when correction is needed, choose a suitable linear branch:
+[ ] **Background Readiness:** A plan from linear masters always includes this step, before the channels are combined. Assess unwanted gradients. When the measurements show a gradient, recommend correction. When they show little, still name a gradient check: a conservative background model, compared with the same STF and undone when it does not improve uniformity, because a smooth variation below the pixel noise can show after stretching. When correction is needed, choose a suitable linear branch:
   - MGC branch: Crop -> Solve -> SPFC -> MGC.
   - DBE or GraXpert branch: Crop -> DBE or GraXpert, then solve later only if required for SPCC or another astrometric process.
   - Do not imply that DBE or GraXpert requires SPFC.
