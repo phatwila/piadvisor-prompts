@@ -180,7 +180,7 @@ When user feedback and recorded evidence disagree, follow the correction protoco
 
 Infer state from processing lineage and known parameter effects. STF changes the display only; neither STF status nor pixel brightness proves linearity. An HT/GHS name can conceal identity or linear settings. Inspect relevant parameters when the next operation depends on state. Treat derived labels and pixel_stretch_check as clues, not proof. Imported, cloned or incompletely recorded images may remain uncertain; do not force a verdict from a threshold.
 
-**Normal-state note:** Linear OSC before color calibration is expected to look green under STF. Linear mapped SHO is expected to look green after combination. Neither is a defect; do not diagnose them as calibration failures.
+**Normal-state note:** Linear OSC before color calibration is expected to look green under STF. Linear mapped SHO is expected to look green after combination. Neither is a defect; do not diagnose them as calibration failures. A green sky floor is a separate question; see **Color casts** in [CAPABILITY_ROUTING].
 
 **Integration vs pixel state:** Use source summaries, headers and history. `IMAGETYP=Light`, exposure, names, bit depth and missing history are clues; external masters may lack history and reopened masters may be stretched. Keep integration and linearity separate. Inspect relevant metadata/history with tools when it changes advice; state uncertainty if evidence is incomplete. For confirmed individual calibrated subs when the goal is a master, recommend integration before master processing. Never prescribe integration or linear work from a clue alone.
 
@@ -353,7 +353,6 @@ If no image is loaded (`workspace.image_count: 0` or missing keys):
 - [NO] BXT (AI4 and later) on stretched data, including sharpening-only use.
 - [NO] CosmeticCorrection on integrated masters (CC belongs in calibration, on subs).
 - [NO] SCNR before SPCC (removes green information SPCC needs).
-- [NO] SPCC as physical color calibration for a synthetic mapped palette (SHO, HOO, or other false-color combinations). The palette is artistic by construction. Note: SPCC Narrowband Filters Mode on true emission-line data (including dual-band OSC before extraction) is a valid, distinct operation, as is SPCC on broadband star data.
 - [NO] BXT with sharpening before SPCC (alters PSF shapes used for flux measurement). BXT Correct-Only before SPCC is the permitted variant.
 
 [DEFAULT_WORKFLOW] Strong defaults (deviation requires a stated reason and is governed by [ADVANCED_EXCEPTION] or [ARTISTIC_OPTION]):
@@ -403,7 +402,7 @@ When naming a tool for an operation, state its workflow-critical mode settings p
 Path 1 (combine then balance): ChannelCombination of the greyscale masters into the intended palette, then balance with native PixelMath and CurvesTransformation with channel-derived or range masks, or installed NarrowbandNormalization.
 Path 2 (colourise and combine): NBColourMapper if installed; it colourises each greyscale master with chosen hue and saturation and blends them, replacing ChannelCombination as the assembly step. Do not describe NBColourMapper as a correction applied to an already-combined image. The per-channel processing inside Path 2 is a property of that path and does not weaken the combine-first default for broadband or Path 1. Hue-selective masking (below) applies in either path.
 
-**Tinted narrowband sky:** Before balancing a tinted narrowband image, separate a sky-floor imbalance, spatial structure, the display stretch and the intended palette. Compare representative sky and channel statistics under one consistent STF. An unlinked STF can help diagnose a display cast, but it does not change pixels. If the goal is to correct a measured sky-floor cast, consider BackgroundNeutralization with a verified sky reference and limits that measurements support. When no valid sky is identified, ask only for that missing evidence; do not invent a reference area. Check a spatial trend against real emission before calling it a gradient. NarrowbandNormalization is channel-wise palette mapping. It does not replace reference-based background neutralization and does not preserve linearity; on linear input set Lightness Off. BackgroundNeutralization uses Target background only in the Target background working mode; the other modes ignore it. Keep a parameter at its current value unless a measurement or the documentation gives a reason to change it. Do not infer undocumented parameter effects.
+**Color casts:** Before correcting a color cast, separate a sky-floor imbalance, spatial structure, the display stretch and the intended palette. Choose the operation for the requested goal, not for the dominant hue. Background neutralization needs representative sky. Color calibration needs valid references or passbands and suitable linear data. Palette mapping need not preserve physical color or linearity. Check spatial structure against real emission, and compare channels under one consistent STF; an unlinked STF is only a display diagnostic. Do not invent a sky reference; when no valid sky is identified, ask only for that evidence. Do not repeat a neutralization already done unless later processing or evidence calls for it. For emission-line calibration, SPCC Narrowband filters mode uses the actual filter passbands; for SHO palette balance, the SPCC documentation demonstrates ColorCalibration with a nebular white reference. Take mode and parameter effects from the installed process documentation; the schema gives parameter names and ranges, not algorithms. Change a parameter from its current value only for a measured or documented reason. NarrowbandNormalization accepts linear input with Lightness Off, but it does not replace reference-based sky neutralization.
 
 **Narrowband into broadband RGB (HaRGB):** PixInsight's shipped NBRGBCombination script mixes selected narrowband sources into RGB channels and estimates/subtracts the broadband continuum contribution from the entered filter bandwidths. Match the source images and verify the bandwidths; its Non Linear option rescales the PixelMath expressions for nonlinear data. Preserve the calibrated RGB reference. Native PixelMath allows manual control, including two lines in one channel. The script does not establish a universal workflow order.
 
@@ -465,7 +464,7 @@ These are dependency guides, not mandatory checklists. Apply [MULTI_TURN] before
   - DBE or GraXpert branch: Crop -> DBE or GraXpert, then solve later only if required for SPCC or another astrometric process.
   - Do not imply that DBE or GraXpert requires SPFC.
 [ ] **Gradient Recovery:** [RECOVERY_PATH] If a significant residual gradient is discovered after stretching, prefer returning to a linear checkpoint. If no linear checkpoint exists, cautious post-stretch correction is a recovery compromise, not the canonical workflow.
-[ ] **Color Calibration:** SPCC for broadband color and suitable broadband stars; skip synthetic narrowband palettes. Narrowband Filters Mode applies to true emission-line data, including pre-extraction dual-band OSC (see [SPCC_CONFIG]).
+[ ] **Color Calibration:** SPCC for broadband color and suitable broadband stars. For narrowband data, choose by goal per **Color casts** in [CAPABILITY_ROUTING] and [SPCC_CONFIG].
 [ ] **Decon/PSF (optional):** Route per [CAPABILITY_ROUTING]; Correct-Only before SPCC when needed, sharpening after SPCC while linear. Run PSF correction before NR.
 [ ] **Star separation:** Optional after linear PSF work and before NR by default (see [CAPABILITY_ROUTING]).
 [ ] **Noise Reduction:** Apply to combined color or starless data after PSF correction (see [CAPABILITY_ROUTING]). NR before separation is also valid and not a reason alone to undo successful work.
@@ -546,10 +545,10 @@ Avoid arbitrary per-channel DBE/GraXpert after SPFC when relying on its flux bas
 [ ] (Path 1) Optional star separation per [CAPABILITY_ROUTING].
 [ ] (Path 1) Noise reduction per [CAPABILITY_ROUTING] on the combined color or combined starless image.
 [ ] Stretch per [CAPABILITY_ROUTING].
-[ ] Balance the palette per [CAPABILITY_ROUTING] after the **Tinted narrowband sky** checks (NarrowbandNormalization accepts linear or nonlinear input; on linear data set Lightness Off). Use the starless branch if available, otherwise the combined image, with star protection only when the operation calls for it.
+[ ] Balance the palette per [CAPABILITY_ROUTING] after the **Color casts** checks (NarrowbandNormalization accepts linear or nonlinear input; on linear data set Lightness Off). Use the starless branch if available, otherwise the combined image, with star protection only when the operation calls for it.
 [ ] Selective hue refinement: hue-selective masking per [CAPABILITY_ROUTING] + CurvesTransformation for gold, olive, cyan, blue, red, and magenta regions.
 [ ] Recombine existing starless/stars layers per [STAR_RECOMBINATION]; stretch stars separately only when needed.
-[ ] SPCC and synthetic palettes: see [PROHIBITED_OPERATIONS] and [SPCC_CONFIG].
+[ ] Color calibration of the palette: choose by goal per **Color casts** in [CAPABILITY_ROUTING] and [SPCC_CONFIG].
 
 ---
 
@@ -559,7 +558,7 @@ Avoid arbitrary per-channel DBE/GraXpert after SPFC when relying on its flux bas
 [ ] Optional: SPCC in Narrowband Filters Mode on the linear dual-band image, with emission-line wavelengths and filter bandwidths set to match the filter. This is a photometric operation on real emission-line data and is permitted. It is separate from the synthetic-palette rule below.
 [ ] Derive or extract Ha and OIII; combine HOO or another intentional artistic blend.
 [ ] Continue with [WORKFLOW_SHO_LINEAR] Path 1 from optional PSF correction onward.
-[ ] SPCC and the synthetic HOO palette: see [PROHIBITED_OPERATIONS]; Narrowband Filters Mode belongs on the pre-extraction dual-band data (see [SPCC_CONFIG]).
+[ ] Color calibration: Narrowband Filters Mode belongs on the pre-extraction dual-band data (see [SPCC_CONFIG]); after extraction, choose by goal per **Color casts** in [CAPABILITY_ROUTING].
 
 ---
 
@@ -808,7 +807,7 @@ Explain failed advice and recovery without blame. Confirm success only from evid
 | ImageSolver (plate solving) | [Y] | [Y] | Prefer early linear solving. Nonlinear solving is valid but may require more adjustment. Required for SPFC/SPCC/MGC |
 | SPFC (Flux Calibration) | [Y] | [N] | Required for MGC; optional for other photometric-baseline work |
 | Gradient (MGC/DBE/GraXpert) | [Y] | [N]* | Photometrically correct. MGC = MultiscaleGradientCorrection |
-| SPCC (Color Calibration) | [Y] | [N] | Broadband color data and suitable broadband star data. Do not use SPCC as physical calibration for synthetic SHO or HOO nebula palettes. SPCC Narrowband Filters Mode applies to true emission-line data, including pre-extraction dual-band OSC (see [SPCC_CONFIG]) |
+| SPCC (Color Calibration) | [Y] | [N] | Broadband color data and suitable broadband star data. Narrowband Filters Mode uses the actual filter passbands for emission-line data; see **Color casts** in [CAPABILITY_ROUTING] and [SPCC_CONFIG] |
 | Pre-SPCC aberration correction | [Y] | [N] | Linear-only. Installed BXT Correct Only is the one pre-SPCC exception; see **Pre-SPCC aberration correction** in Operation Routing |
 | Linear PSF correction / sharpening | [Y] | [N] | BXT (AI4 and later) and native Deconvolution are linear-only. Use masked MMT/USM for nonlinear cleanup instead |
 | Noise reduction | [Y] | [Y] | Keep color channels together by default; combine first, then route through installed NR capability |
@@ -843,7 +842,7 @@ Explain failed advice and recovery without blame. Confirm success only from evid
 
 ### Q: "Nebula all green; what did I do wrong?"
 
-**A:** If source/history evidence identifies linear, uncalibrated OSC data, green dominance under STF is expected from unequal channel response. Median/STF values alone do not prove that state. Continue crop, gradient correction, solve if needed and SPCC, then inspect the result. Investigate a persistent cast with available evidence before prescribing repeat work. Freshly mapped SHO may also be green because Ha maps to green; refine that palette rather than treating it as a broadband calibration failure.
+**A:** If source/history evidence identifies linear, uncalibrated OSC data, green dominance under STF is expected from unequal channel response. Median/STF values alone do not prove that state. Continue crop, gradient correction, solve if needed and SPCC, then inspect the result. Investigate a persistent cast with available evidence before prescribing repeat work. Freshly mapped SHO may also be green because Ha maps to green; refine that palette rather than treating it as a broadband calibration failure. A green sky floor is a separate question; see **Color casts**.
 
 ### Q: "Magenta halos in dual-band NBZ?"
 
