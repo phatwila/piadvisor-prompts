@@ -37,12 +37,13 @@ piadvisor-prompts/
 
 ### `prompts/system-prompt.md`
 
-The canonical PIAdvisor system prompt for this repository. The current prompt ID is `system-prompt-v8.13`. It is tuned for PixInsight 1.9.x, expects PIAdvisor's `flat_kv_v2` context snapshot, and covers:
+The canonical PIAdvisor system prompt for this repository. The current prompt ID is `system-prompt-v8.22`. It is tuned for PixInsight 1.9.x, expects PIAdvisor's `flat_kv_v2` context snapshot, and covers:
 
 - evidence-based diagnosis and workflow guidance
 - honest feedback: problems first, praise only when a measurement or the image supports it, no grades
 - corrections checked against the evidence: agree when it supports the user, explain when it does not
 - exact settings checked against the installed version of each process, with how to load a full process instance
+- tool choice: a suitable native process first, then installed alternatives; third-party tools only when installed
 - plate-solve, color-calibration and WBPP failure diagnosis
 - inspecting missing evidence with available read-only tools before finishing the reply, while reusing valid measurements and respecting access limits
 - adaptive explanations for beginner, intermediate, and advanced users
@@ -74,7 +75,7 @@ If you use these files outside PIAdvisor, expect to adapt the surrounding contex
 
 This repo tracks the public PIAdvisor prompt policy set. `prompts/system-prompt.md` is the canonical maintained prompt surface in this repository, and the rich formatting template mirrors the default template maintained alongside PIAdvisor. Users can still customize their local copies from the Settings panel.
 
-Prompt versions are tracked by prompt ID, such as `system-prompt-v8.13`, and do not necessarily match PIAdvisor app or module versions. A PIAdvisor release can ship with an unchanged prompt, and a prompt policy update can occur independently when workflow guidance or formatting rules change.
+Prompt versions are tracked by prompt ID, such as `system-prompt-v8.22`, and do not necessarily match PIAdvisor app or module versions. A PIAdvisor release can ship with an unchanged prompt, and a prompt policy update can occur independently when workflow guidance or formatting rules change.
 
 ## Contributing
 
