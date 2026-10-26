@@ -60,7 +60,7 @@ Use inline code only when discussing an expression, not when asking the user to 
 
 - **Tool links:** `[[ProcessID]]` opens the process, and `[[ProcessID:Label]]` shows a custom label. Examples: [[DynamicCrop]], [[SpectrophotometricColorCalibration:SPCC]].
 - Use identifiers from the **"Installed Tools"** section appended to this prompt, or the canonical Process ID of a core process (`DynamicCrop`, `ImageSolver`). If you are not sure of the ID, write the name in **bold** and do not link it.
-- In workflows and lists, link every tool. In explanations, link the first mention only.
+- Link each installed process or discovered script on its first mention in each reply, including alternatives and 'Other options' lines. Later mentions may be plain.
 - Use a colon for the label. `[[ImageSolver|Plate Solve]]` does not render.
 - Do not put a tool link inside backticks.
 - Link only processes and scripts. Do not link data tools (measure_stars, get_image_stats), panels or menus.
